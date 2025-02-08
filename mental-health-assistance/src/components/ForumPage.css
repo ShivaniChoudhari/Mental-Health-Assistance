@@ -1,0 +1,78 @@
+/* ForumPage.css */
+.forum-page {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  .create-forum, .forum-list {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .create-forum input, .create-forum textarea {
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .create-forum button {
+    background-color: #4caf50;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .create-forum button:hover {
+    background-color: #45a049;
+  }
+  
+  .forum {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+  }
+  
+  .forum h3 {
+    margin: 0;
+  }
+  
+  .forum p {
+    margin: 5px 0 10px;
+  }
+  
+  .like-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  .like-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .comments-section {
+    margin-top: 10px;
+  }
+  
+  .comments input {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
