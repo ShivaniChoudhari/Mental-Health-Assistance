@@ -1,0 +1,88 @@
+-- USERS TABLE
+CREATE TABLE [dbo].[Users] (
+    [id]         INT            IDENTITY (1, 1) NOT NULL,
+    [name]       NVARCHAR (100) NOT NULL,
+    [email]      NVARCHAR (100) NOT NULL,
+    [password]   NVARCHAR (255) NOT NULL,
+    [role]       NVARCHAR (50)  DEFAULT ('user') NULL,
+    [created_at] DATETIME       DEFAULT (getdate()) NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    UNIQUE NONCLUSTERED ([email] ASC),
+    CHECK ([role] IN ('admin', 'user', 'therapist'))
+);
+
+-- SUBSCRIPTIONS TABLE
+CREATE TABLE [dbo].[Subscriptions] (
+    [id]                  INT           IDENTITY (1, 1) NOT NULL,
+    [user_id]             INT           NOT NULL,
+    [subscription_status] BIT           DEFAULT (0) NULL, -- 1 = Paid, 0 = Free
+    [last_payment_date]   DATETIME      DEFAULT (NULL) NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([user_id]) REFERENCES [dbo].[Users] ([id])
+);
+
+-- THERAPISTS TABLE
+CREATE TABLE [dbo].[Therapists] (
+    [id]                  INT            IDENTITY (1, 1) NOT NULL,
+    [name]                NVARCHAR (100) NOT NULL,
+    [email]               NVARCHAR (100) NOT NULL,
+    [password]            NVARCHAR (255) NOT NULL,
+    [specialization]      NVARCHAR (255) NOT NULL,
+    [years_of_experience] INT            NULL,
+    [license_number]      NVARCHAR (100) NOT NULL,
+    [approval_status]     NVARCHAR (50)  DEFAULT ('pending') NULL,
+    [created_at]          DATETIME       DEFAULT (getdate()) NULL,
+    [Role]                NVARCHAR (50)  DEFAULT ('therapist') NOT NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    UNIQUE NONCLUSTERED ([license_number] ASC),
+    UNIQUE NONCLUSTERED ([email] ASC),
+    CHECK ([years_of_experience] >= 0),
+    CHECK ([approval_status] IN ('rejected', 'approved', 'pending'))
+);
+
+-- SESSIONS TABLE (Added therapist_name)
+CREATE TABLE [dbo].[Sessions] (
+    [id]            INT           IDENTITY (1, 1) NOT NULL,
+    [user_id]       INT           NOT NULL,
+    [therapist_id]  INT           NOT NULL,
+    [therapist_name] NVARCHAR(100) NOT NULL, -- Added therapist_name
+    [date_time]     DATETIME      NOT NULL,
+    [status]        NVARCHAR (50) DEFAULT ('pending') NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([user_id]) REFERENCES [dbo].[Users] ([id]),
+    FOREIGN KEY ([therapist_id]) REFERENCES [dbo].[Therapists] ([id]),
+    CHECK ([status] IN ('cancelled', 'completed', 'pending'))
+);
+
+-- FORUMS TABLE (Removed 'likes')
+CREATE TABLE [dbo].[Forums] (
+    [id]          INT            IDENTITY (1, 1) NOT NULL,
+    [title]       NVARCHAR (255) NOT NULL,
+    [description] NVARCHAR (MAX) NULL,
+    [created_by]  INT            NOT NULL,
+    [created_at]  DATETIME       DEFAULT (getdate()) NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([created_by]) REFERENCES [dbo].[Users] ([id])
+);
+
+-- CHATS TABLE (Removed 'timestamp')
+CREATE TABLE [dbo].[Chats] (
+    [id]        INT            IDENTITY (1, 1) NOT NULL,
+    [forum_id]  INT            NOT NULL,
+    [user_id]   INT            NOT NULL,
+    [message]   NVARCHAR (MAX) NOT NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([forum_id]) REFERENCES [dbo].[Forums] ([id]),
+    FOREIGN KEY ([user_id]) REFERENCES [dbo].[Users] ([id])
+);
+
+-- PAYMENTS TABLE (Removed 'service')
+CREATE TABLE [dbo].[Payments] (
+    [id]                    INT             IDENTITY (1, 1) NOT NULL,
+    [user_id]               INT             NOT NULL,
+    [amount]                DECIMAL (10, 2) NOT NULL,
+    [payment_date]          DATETIME        DEFAULT (getdate()) NULL,
+    [reference_id]          NVARCHAR (100)  DEFAULT (NULL) NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([user_id]) REFERENCES [dbo].[Users] ([id])
+);
